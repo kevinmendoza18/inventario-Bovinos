@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Control de Animales</title>
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="/inventario-Bovinos/manifest.json">
 <meta name="theme-color" content="#2d6a4f">
 <style>
   body { font-family: Arial; margin: 30px; background: #f8f9fa; }
@@ -141,7 +141,7 @@ actualizarResumen();
 
 <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
+    navigator.serviceWorker.register('/inventario-Bovinos/sw.js')
       .then(function(reg) {
         console.log('Service Worker registrado!', reg);
       })
