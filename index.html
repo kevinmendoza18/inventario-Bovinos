@@ -12,23 +12,27 @@
   th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
   th { background: #e9ecef; }
   tfoot td { font-weight: bold; background: #f1f3f5; }
-  input[type="number"] { width: 50px; }
-  button { padding: 4px 8px; margin-left: 5px; font-weight: bold; cursor: pointer; }
   .num-control {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  input[type="number"] {
+    width: 50px;
+    padding: 5px;
   }
   .num-control button {
-    width: 25px; 
-    height: 25px; 
-    padding: 0;
+    width: 28px;
+    height: 28px;
     font-weight: bold;
-    margin-left: 2px;
-    margin-right: 2px;
+    cursor: pointer;
   }
+  button { padding: 4px 8px; margin-left: 5px; font-weight: bold; cursor: pointer; }
   @media (max-width: 480px) {
     button { padding: 6px 10px; font-size: 18px; }
     input[type="number"] { width: 45px; }
+    .num-control button { width: 30px; height: 30px; }
   }
   h1 {
     font-size: 3em;
@@ -75,55 +79,271 @@
       </td>
       <td class="total">0</td>
     </tr>
-    <!-- Repite para los otros tr igual, se puede automatizar -->
-    <!-- Omisión para brevedad, agrega botones a cada input compra y ventas -->
+    <!-- Copia este bloque para todas las filas existentes, con botones en compra y ventas igual -->
+    <!-- Puedes incluir todas las filas aquí siguiendo el patrón -->
   </tbody>
   <tfoot>
     <tr><td colspan="3">TOTAL HEMBRAS</td><td id="totalHembras">0</td></tr>
   </tfoot>
 </table>
 
-<!-- Repite tabla Machos con estructura similar -->
+<h2>Registro de Machos
+  <button id="agregarMacho" title="Agregar fila macho">+</button>
+  <button id="eliminarMacho" title="Eliminar última fila macho">-</button>
+  <button id="nuevaCategoriaMacho" title="Crear nueva categoría">Nueva Categoría</button>
+</h2>
+<table id="tablaMachos">
+  <thead>
+    <tr>
+      <th>Descripción</th>
+      <th>Compras y Nacimientos</th>
+      <th>Ventas</th>
+      <th>Total Existentes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0 a 3 meses</td>
+      <td class="num-control">
+        <input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" />
+        <button class="btn-decrement">-</button>
+        <button class="btn-increment">+</button>
+      </td>
+      <td class="num-control">
+        <input type="number" class="ventas" value="0" min="0" />
+        <button class="btn-decrement">-</button>
+        <button class="btn-increment">+</button>
+      </td>
+      <td class="total">0</td>
+    </tr>
+    <!-- Similarmente, incluye todas las filas necesarias -->
+  </tbody>
+  <tfoot>
+    <tr><td colspan="3">TOTAL MACHOS</td><td id="totalMachos">0</td></tr>
+  </tfoot>
+</table>
+
+<h2>Total General</h2>
+<table>
+  <tr>
+    <th>Total Hembras</th>
+    <th>Total Machos</th>
+    <th>Total General</th>
+  </tr>
+  <tr>
+    <td id="resumenHembras">0</td>
+    <td id="resumenMachos">0</td>
+    <td id="resumenTotal">0</td>
+  </tr>
+</table>
 
 <script>
-// Función para manejar botones + y - al lado de inputs
-function setupNumControls() {
-  document.querySelectorAll('.num-control').forEach(container => {
-    const input = container.querySelector('input[type=number]');
-    const btnIncrement = container.querySelector('.btn-increment');
-    const btnDecrement = container.querySelector('.btn-decrement');
+function calcularTotales(tablaID, totalID) {
+  const tabla = document.getElementById(tablaID);
+  let total = 0;
+  [...tabla.tBodies[0].rows].forEach(fila => {
+    const compraInput = fila.querySelector('.compra');
+    const ventasInput = fila.querySelector('.ventas');
+    const totalCell = fila.querySelector('.total');
+    const compras = parseFloat(compraInput.getAttribute('data-valor')) || 0;
+    const ventas = parseFloat(ventasInput.value) || 0;
+    const totalExistente = compras - ventas;
+    totalCell.textContent = totalExistente >= 0 ? totalExistente : 0;
+    total += totalExistente >= 0 ? totalExistente : 0;
+  });
+  document.getElementById(totalID).textContent = total;
+}
 
-    btnIncrement.addEventListener('click', () => {
-      let val = parseInt(input.value) || 0;
-      val++;
-      input.value = val;
-      input.dispatchEvent(new Event('input')); // para que actualice event listeners
+function actualizarResumen() {
+  const hembras = parseFloat(document.getElementById("totalHembras").textContent) || 0;
+  const machos = parseFloat(document.getElementById("totalMachos").textContent) || 0;
+  document.getElementById("resumenHembras").textContent = hembras;
+  document.getElementById("resumenMachos").textContent = machos;
+  document.getElementById("resumenTotal").textContent = hembras + machos;
+}
+
+function guardarDatos() {
+  const datosHembras = [...document.querySelectorAll("#tablaHembras tbody tr")].map(tr => ({
+    descripcion: tr.cells[0].textContent,
+    compra: tr.querySelector('.compra').getAttribute('data-valor'),
+    ventas: tr.querySelector('.ventas').value
+  }));
+  const datosMachos = [...document.querySelectorAll("#tablaMachos tbody tr")].map(tr => ({
+    descripcion: tr.cells[0].textContent,
+    compra: tr.querySelector('.compra').getAttribute('data-valor'),
+    ventas: tr.querySelector('.ventas').value
+  }));
+  localStorage.setItem("datosHembras", JSON.stringify(datosHembras));
+  localStorage.setItem("datosMachos", JSON.stringify(datosMachos));
+}
+
+function cargarDatos() {
+  const datosHembras = JSON.parse(localStorage.getItem("datosHembras") || "[]");
+  const datosMachos = JSON.parse(localStorage.getItem("datosMachos") || "[]");
+
+  const tbodyHembras = document.querySelector("#tablaHembras tbody");
+  const tbodyMachos = document.querySelector("#tablaMachos tbody");
+
+  if (datosHembras.length > 0) {
+    tbodyHembras.innerHTML = '';
+    datosHembras.forEach(item => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${item.descripcion}</td>
+        <td class="num-control">
+          <input type="number" class="compra" value="${item.compra}" min="0" data-valor="${item.compra}" data-previo="${item.compra}" />
+          <button class="btn-decrement">-</button>
+          <button class="btn-increment">+</button>
+        </td>
+        <td class="num-control">
+          <input type="number" class="ventas" value="${item.ventas}" min="0" />
+          <button class="btn-decrement">-</button>
+          <button class="btn-increment">+</button>
+        </td>
+        <td class="total">0</td>`;
+      tbodyHembras.appendChild(fila);
     });
+  }
 
-    btnDecrement.addEventListener('click', () => {
-      let val = parseInt(input.value) || 0;
-      if(val > parseInt(input.min || '0')) {
-        val--;
-        input.value = val;
-        input.dispatchEvent(new Event('input'));
+  if (datosMachos.length > 0) {
+    tbodyMachos.innerHTML = '';
+    datosMachos.forEach(item => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${item.descripcion}</td>
+        <td class="num-control">
+          <input type="number" class="compra" value="${item.compra}" min="0" data-valor="${item.compra}" data-previo="${item.compra}" />
+          <button class="btn-decrement">-</button>
+          <button class="btn-increment">+</button>
+        </td>
+        <td class="num-control">
+          <input type="number" class="ventas" value="${item.ventas}" min="0" />
+          <button class="btn-decrement">-</button>
+          <button class="btn-increment">+</button>
+        </td>
+        <td class="total">0</td>`;
+      tbodyMachos.appendChild(fila);
+    });
+  }
+
+  actualizarListeners();
+  actualizarListenersControlesNumericos();
+  calcularTotales("tablaHembras", "totalHembras");
+  calcularTotales("tablaMachos", "totalMachos");
+  actualizarResumen();
+}
+
+function actualizarListeners() {
+  document.querySelectorAll('.ventas').forEach(input => {
+    input.oninput = null;
+  });
+  document.querySelectorAll('.ventas').forEach(input => {
+    input.addEventListener('input', () => {
+      calcularTotales("tablaHembras", "totalHembras");
+      calcularTotales("tablaMachos", "totalMachos");
+      actualizarResumen();
+      guardarDatos();
+    });
+  });
+
+  document.querySelectorAll('.compra').forEach(input => {
+    input.oninput = null;
+  });
+  document.querySelectorAll('.compra').forEach(input => {
+    input.addEventListener('input', () => {
+      let previo = parseInt(input.getAttribute('data-previo')) || 0;
+      let actual = parseInt(input.value) || 0;
+      let acumulado = parseInt(input.getAttribute('data-valor')) || 0;
+
+      let incremento = actual - previo;
+      if (incremento !== 0) {
+        acumulado += incremento;
+        if(acumulado < 0) acumulado = 0;
+        input.setAttribute('data-valor', acumulado);
+        input.value = acumulado;
+        input.setAttribute('data-previo', acumulado);
+
+        calcularTotales("tablaHembras", "totalHembras");
+        calcularTotales("tablaMachos", "totalMachos");
+        actualizarResumen();
+        guardarDatos();
       }
     });
   });
 }
 
-// Llama esta función después de cargar datos o agregar filas dinámicamente
-function actualizarListenersCustom() {
-  setupNumControls();
-  // Puedes también llamar aquí la función que actualiza totales y demás
+function actualizarListenersControlesNumericos() {
+  // Botones + y - incrementan o decrementan inputs numéricos
+  document.querySelectorAll('.num-control').forEach(container => {
+    const input = container.querySelector('input[type="number"]');
+    const btnIncrement = container.querySelector('.btn-increment');
+    const btnDecrement = container.querySelector('.btn-decrement');
+
+    btnIncrement.onclick = () => {
+      let val = parseInt(input.value) || 0;
+      val++;
+      input.value = val;
+      input.dispatchEvent(new Event('input'));
+    };
+
+    btnDecrement.onclick = () => {
+      let val = parseInt(input.value) || 0;
+      if (val > (parseInt(input.min) || 0)) {
+        val--;
+        input.value = val;
+        input.dispatchEvent(new Event('input'));
+      }
+    };
+  });
 }
 
-window.addEventListener('load', () => {
-  // Asumiendo que ya tienes tu cargarDatos y demás funciones
-  cargarDatos();
-  actualizarListenersCustom();
-});
+function agregarFila(tablaID) {
+  const descripcion = prompt("Ingrese el nombre de la nueva categoría:", "");
+  if (!descripcion) return;
+  const tbody = document.querySelector(`#${tablaID} tbody`);
+  const fila = document.createElement('tr');
+  fila.innerHTML = `
+    <td>${descripcion}</td>
+    <td class="num-control">
+      <input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" />
+      <button class="btn-decrement">-</button>
+      <button class="btn-increment">+</button>
+    </td>
+    <td class="num-control">
+      <input type="number" class="ventas" value="0" min="0" />
+      <button class="btn-decrement">-</button>
+      <button class="btn-increment">+</button>
+    </td>
+    <td class="total">0</td>`;
+  tbody.appendChild(fila);
+  actualizarListeners();
+  actualizarListenersControlesNumericos();
+  guardarDatos();
+}
 
-// También llama actualizarListenersCustom() después de agregar filas para aplicar a nuevos inputs
+function eliminarUltimaFila(tablaID) {
+  const tbody = document.querySelector(`#${tablaID} tbody`);
+  if (tbody.rows.length > 1) {
+    tbody.deleteRow(tbody.rows.length - 1);
+    calcularTotales("tablaHembras", "totalHembras");
+    calcularTotales("tablaMachos", "totalMachos");
+    actualizarResumen();
+    guardarDatos();
+  }
+}
+
+document.getElementById("agregarHembra").addEventListener('click', () => agregarFila("tablaHembras"));
+document.getElementById("eliminarHembra").addEventListener('click', () => eliminarUltimaFila("tablaHembras"));
+document.getElementById("agregarMacho").addEventListener('click', () => agregarFila("tablaMachos"));
+document.getElementById("eliminarMacho").addEventListener('click', () => eliminarUltimaFila("tablaMachos"));
+
+window.onload = cargarDatos;
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('Service Worker registrado!', reg))
+    .catch(err => console.log('Service Worker error: ', err));
+}
 </script>
 
 </body>
