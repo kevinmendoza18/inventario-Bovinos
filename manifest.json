@@ -1,0 +1,22 @@
+{
+    "name": "Inventario Bovinos",
+    "short_name": "Inventario",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#f8f9fa",
+    "theme_color": "#2d6a4f",
+    "description": "Registro de inventario bovino para ganaderos",
+    "icons": [
+      {
+        "src": "icon-192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "icon-512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ]
+  }
+  
