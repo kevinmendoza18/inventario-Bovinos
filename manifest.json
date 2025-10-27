@@ -1,19 +1,21 @@
 {
-    "name": "Inventario Bovinos",
-    "short_name": "Inventario",
-    "start_url": "/inventario-Bovinos/",
-    "display": "standalone",
-    "background_color": "#f8f9fa",
-    "theme_color": "#2d6a4f",
-    "description": "Registro de inventario bovino para ganaderos",
-    "icons": [
-        { "src": "/inventario-Bovinos/icon-192.png", "type": "image/png", "sizes": "192x192" },
-        { "src": "/inventario-Bovinos/icon-512.png", "type": "image/png", "sizes": "512x512" },
-      {
-        "src": "icon-512.png",
-        "type": "image/png",
-        "sizes": "512x512"
-      }
-    ]
-  }
-  
+  "name": "Inventario Bovinos",
+  "short_name": "Inventario",
+  "start_url": "/inventario-Bovinos/",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#2d6a4f",
+  "description": "Registro de inventario bovino para ganaderos",
+  "icons": [
+    {
+      "src": "/inventario-Bovinos/assets/img/icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/inventario-Bovinos/assets/img/icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
