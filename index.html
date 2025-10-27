@@ -13,81 +13,94 @@
   th { background: #e9ecef; }
   tfoot td { font-weight: bold; background: #f1f3f5; }
   input[type="number"] { width: 70px; }
+  button { padding: 5px 8px; margin: 0 3px; font-weight: bold; cursor: pointer; }
+  .btn-actions { white-space: nowrap; }
+  @media (max-width: 480px) {
+    button { padding: 8px 12px; font-size: 18px; }
+    input[type="number"] { width: 60px; }
+  }
+  h1 {
+    font-size: 3em;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #2d6a4f;
+    background: linear-gradient(90deg, #b7e4c7 0%, #52b788 100%);
+    padding: 30px 10px;
+    border-radius: 15px;
+    text-align:center;
+    box-shadow: 0 4px 12px rgba(80, 80, 80, 0.07);
+    margin-bottom: 40px;
+  }
 </style>
 </head>
 <body>
-  <h1 style="
-  font-size: 3em; 
-  font-family: 'Segoe UI', Arial, sans-serif; 
-  color: #2d6a4f; 
-  background: linear-gradient(90deg, #b7e4c7 0%, #52b788 100%);
-  padding: 30px 10px 30px 10px;
-  border-radius: 15px;
-  text-align:center;
-  box-shadow: 0 4px 12px rgba(80, 80, 80, 0.07);
-  margin-bottom: 40px;">
-  INVENTARIO BOVINOS
-</h1>
-  
-<h2>Registro de Hembras</h2>
-<table id="tablaHembras">
-  <thead>
-    <tr>
-      <th>Descripción</th>
-      <th>Compras y Nacimientos</th>
-      <th>Ventas</th>
-      <th>Total Existentes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td>0 a 3 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-    <tr><td>3 a 9 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-    <tr><td>9 a 12 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-    <tr><td>1 a 2 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-    <tr><td>2 a 3 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-    <tr><td>Más de 3 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-  </tbody>
-  <tfoot>
-    <tr><td colspan="3">TOTAL HEMBRAS</td><td id="totalHembras">0</td></tr>
-  </tfoot>
-</table>
+  <h1>INVENTARIO BOVINOS</h1>
 
-<h2>Registro de Machos</h2>
-<table id="tablaMachos">
-  <thead>
-    <tr>
-      <th>Descripción</th>
-      <th>Compras y Nacimientos</th>
-      <th>Ventas</th>
-      <th>Total Existentes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td>0 a 3 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-    <tr><td>3 a 9 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-    <tr><td>9 a 12 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-    <tr><td>1 a 2 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-    <tr><td>2 a 3 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-    <tr><td>Más de 3 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
-  </tbody>
-  <tfoot>
-    <tr><td colspan="3">TOTAL MACHOS</td><td id="totalMachos">0</td></tr>
-  </tfoot>
-</table>
+  <h2>Registro de Hembras
+    <button id="agregarHembra" title="Agregar fila hembra">+</button>
+    <button id="eliminarHembra" title="Eliminar última fila hembra">-</button>
+  </h2>
+  <table id="tablaHembras">
+    <thead>
+      <tr>
+        <th>Descripción</th>
+        <th>Compras y Nacimientos</th>
+        <th>Ventas</th>
+        <th>Total Existentes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>0 a 3 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+      <tr><td>3 a 9 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+      <tr><td>9 a 12 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+      <tr><td>1 a 2 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+      <tr><td>2 a 3 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+      <tr><td>Más de 3 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td colspan="3">TOTAL HEMBRAS</td><td id="totalHembras">0</td></tr>
+    </tfoot>
+  </table>
 
-<h2>Total General</h2>
-<table>
-  <tr>
-    <th>Total Hembras</th>
-    <th>Total Machos</th>
-    <th>Total General</th>
-  </tr>
-  <tr>
-    <td id="resumenHembras">0</td>
-    <td id="resumenMachos">0</td>
-    <td id="resumenTotal">0</td>
-  </tr>
-</table>
+  <h2>Registro de Machos
+    <button id="agregarMacho" title="Agregar fila macho">+</button>
+    <button id="eliminarMacho" title="Eliminar última fila macho">-</button>
+  </h2>
+  <table id="tablaMachos">
+    <thead>
+      <tr>
+        <th>Descripción</th>
+        <th>Compras y Nacimientos</th>
+        <th>Ventas</th>
+        <th>Total Existentes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>0 a 3 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+      <tr><td>3 a 9 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+      <tr><td>9 a 12 meses</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+      <tr><td>1 a 2 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+      <tr><td>2 a 3 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+      <tr><td>Más de 3 años</td><td><input type="number" class="compra" value="0" min="0"></td><td><input type="number" class="ventas" value="0" min="0"></td><td class="total">0</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td colspan="3">TOTAL MACHOS</td><td id="totalMachos">0</td></tr>
+    </tfoot>
+  </table>
+
+  <h2>Total General</h2>
+  <table>
+    <tr>
+      <th>Total Hembras</th>
+      <th>Total Machos</th>
+      <th>Total General</th>
+    </tr>
+    <tr>
+      <td id="resumenHembras">0</td>
+      <td id="resumenMachos">0</td>
+      <td id="resumenTotal">0</td>
+    </tr>
+  </table>
+
 
 <script>
 function calcularTotales(tablaID, totalID) {
@@ -99,10 +112,9 @@ function calcularTotales(tablaID, totalID) {
     const totalCell = fila.querySelector('.total');
     const compras = parseFloat(compraInput.value) || 0;
     const ventas = parseFloat(ventasInput.value) || 0;
-    // Calcula total existentes
     const totalExistente = compras - ventas;
-    totalCell.textContent = totalExistente;
-    total += totalExistente;
+    totalCell.textContent = totalExistente >= 0 ? totalExistente : 0;
+    total += totalExistente >= 0 ? totalExistente : 0;
   });
   document.getElementById(totalID).textContent = total;
 }
@@ -115,41 +127,127 @@ function actualizarResumen() {
   document.getElementById("resumenTotal").textContent = hembras + machos;
 }
 
-// Cuando cambian compras
-document.querySelectorAll('.compra').forEach(input => {
-  input.addEventListener('input', () => {
+function guardarDatos() {
+  const datosHembras = [...document.querySelectorAll("#tablaHembras tbody tr")].map(tr => ({
+    descripcion: tr.cells[0].textContent,
+    compra: tr.querySelector('.compra').value,
+    ventas: tr.querySelector('.ventas').value
+  }));
+  const datosMachos = [...document.querySelectorAll("#tablaMachos tbody tr")].map(tr => ({
+    descripcion: tr.cells[0].textContent,
+    compra: tr.querySelector('.compra').value,
+    ventas: tr.querySelector('.ventas').value
+  }));
+  localStorage.setItem("datosHembras", JSON.stringify(datosHembras));
+  localStorage.setItem("datosMachos", JSON.stringify(datosMachos));
+}
+
+function cargarDatos() {
+  const datosHembras = JSON.parse(localStorage.getItem("datosHembras") || "[]");
+  const datosMachos = JSON.parse(localStorage.getItem("datosMachos") || "[]");
+
+  const tbodyHembras = document.querySelector("#tablaHembras tbody");
+  const tbodyMachos = document.querySelector("#tablaMachos tbody");
+
+  if (datosHembras.length > 0) {
+    tbodyHembras.innerHTML = ''; // Borra para cargar dinamicamente
+    datosHembras.forEach(item => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${item.descripcion}</td>
+        <td><input type="number" class="compra" value="${item.compra}" min="0"></td>
+        <td><input type="number" class="ventas" value="${item.ventas}" min="0"></td>
+        <td class="total">0</td>`;
+      tbodyHembras.appendChild(fila);
+    });
+  }
+
+  if (datosMachos.length > 0) {
+    tbodyMachos.innerHTML = '';
+    datosMachos.forEach(item => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${item.descripcion}</td>
+        <td><input type="number" class="compra" value="${item.compra}" min="0"></td>
+        <td><input type="number" class="ventas" value="${item.ventas}" min="0"></td>
+        <td class="total">0</td>`;
+      tbodyMachos.appendChild(fila);
+    });
+  }
+
+  actualizarListeners();
+  calcularTotales("tablaHembras", "totalHembras");
+  calcularTotales("tablaMachos", "totalMachos");
+  actualizarResumen();
+}
+
+function actualizarListeners() {
+  // Remover eventos anteriores para evitar duplicados
+  document.querySelectorAll('.compra, .ventas').forEach(input => {
+    input.oninput = null;
+  });
+  // Añadir eventos a inputs nuevos
+  document.querySelectorAll('.compra, .ventas').forEach(input => {
+    input.addEventListener('input', () => {
+      calcularTotales("tablaHembras", "totalHembras");
+      calcularTotales("tablaMachos", "totalMachos");
+      actualizarResumen();
+      guardarDatos();
+    });
+  });
+}
+
+// Botones agregar/eliminar
+function agregarFila(tablaID, descripcion = "Nueva categoría") {
+  const tbody = document.querySelector(`#${tablaID} tbody`);
+  const fila = document.createElement('tr');
+  fila.innerHTML = `
+    <td>${descripcion}</td>
+    <td><input type="number" class="compra" value="0" min="0"></td>
+    <td><input type="number" class="ventas" value="0" min="0"></td>
+    <td class="total">0</td>`;
+  tbody.appendChild(fila);
+  actualizarListeners();
+  guardarDatos();
+}
+
+function eliminarUltimaFila(tablaID) {
+  const tbody = document.querySelector(`#${tablaID} tbody`);
+  if (tbody.rows.length > 1) { // Evita borrar toda la tabla
+    tbody.deleteRow(tbody.rows.length - 1);
     calcularTotales("tablaHembras", "totalHembras");
     calcularTotales("tablaMachos", "totalMachos");
     actualizarResumen();
-  });
+    guardarDatos();
+  }
+}
+
+// Eventos botones
+document.getElementById("agregarHembra").addEventListener('click', () => {
+  agregarFila("tablaHembras");
+});
+document.getElementById("eliminarHembra").addEventListener('click', () => {
+  eliminarUltimaFila("tablaHembras");
+});
+document.getElementById("agregarMacho").addEventListener('click', () => {
+  agregarFila("tablaMachos");
+});
+document.getElementById("eliminarMacho").addEventListener('click', () => {
+  eliminarUltimaFila("tablaMachos");
 });
 
-// Cuando cambian ventas
-document.querySelectorAll('.ventas').forEach(input => {
-  input.addEventListener('input', () => {
-    calcularTotales("tablaHembras", "totalHembras");
-    calcularTotales("tablaMachos", "totalMachos");
-    actualizarResumen();
-  });
-});
-
-// Inicializa los totales
-calcularTotales("tablaHembras", "totalHembras");
-calcularTotales("tablaMachos", "totalMachos");
-actualizarResumen();
+// Inicialización al cargar página
+window.onload = cargarDatos;
 </script>
 
 <script>
+  // Registro Service Worker (si se usa PWA)
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/inventario-Bovinos/sw.js')
-      .then(function(reg) {
-        console.log('Service Worker registrado!', reg);
-      })
-      .catch(function(err) {
-        console.log('Service Worker error: ', err);
-      });
+      .then(reg => console.log('Service Worker registrado!', reg))
+      .catch(err => console.log('Service Worker error: ', err));
   }
-  </script>
-  
+</script>
+
 </body>
 </html>
