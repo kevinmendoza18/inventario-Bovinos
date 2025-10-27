@@ -12,27 +12,22 @@
   th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
   th { background: #e9ecef; }
   tfoot td { font-weight: bold; background: #f1f3f5; }
-  .num-control {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
+  input[type="number"] { width: 50px; }
+
+  /* Mostrar flechitas nativas en navegadores que lo soportan */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: auto;
+    margin: 0;
   }
   input[type="number"] {
-    width: 50px;
-    padding: 5px;
+    -moz-appearance: textfield;
   }
-  .num-control button {
-    width: 28px;
-    height: 28px;
-    font-weight: bold;
-    cursor: pointer;
-  }
+
   button { padding: 4px 8px; margin-left: 5px; font-weight: bold; cursor: pointer; }
   @media (max-width: 480px) {
     button { padding: 6px 10px; font-size: 18px; }
     input[type="number"] { width: 45px; }
-    .num-control button { width: 30px; height: 30px; }
   }
   h1 {
     font-size: 3em;
@@ -65,22 +60,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>0 a 3 meses</td>
-      <td class="num-control">
-        <input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" />
-        <button class="btn-decrement">-</button>
-        <button class="btn-increment">+</button>
-      </td>
-      <td class="num-control">
-        <input type="number" class="ventas" value="0" min="0" />
-        <button class="btn-decrement">-</button>
-        <button class="btn-increment">+</button>
-      </td>
-      <td class="total">0</td>
-    </tr>
-    <!-- Copia este bloque para todas las filas existentes, con botones en compra y ventas igual -->
-    <!-- Puedes incluir todas las filas aquí siguiendo el patrón -->
+    <tr><td>0 a 3 meses</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
+    <tr><td>3 a 9 meses</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
+    <tr><td>9 a 12 meses</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
+    <tr><td>1 a 2 años</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
+    <tr><td>2 a 3 años</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
+    <tr><td>Más de 3 años</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
   </tbody>
   <tfoot>
     <tr><td colspan="3">TOTAL HEMBRAS</td><td id="totalHembras">0</td></tr>
@@ -102,21 +87,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>0 a 3 meses</td>
-      <td class="num-control">
-        <input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" />
-        <button class="btn-decrement">-</button>
-        <button class="btn-increment">+</button>
-      </td>
-      <td class="num-control">
-        <input type="number" class="ventas" value="0" min="0" />
-        <button class="btn-decrement">-</button>
-        <button class="btn-increment">+</button>
-      </td>
-      <td class="total">0</td>
-    </tr>
-    <!-- Similarmente, incluye todas las filas necesarias -->
+    <tr><td>0 a 3 meses</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
+    <tr><td>3 a 9 meses</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
+    <tr><td>9 a 12 meses</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
+    <tr><td>1 a 2 años</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
+    <tr><td>2 a 3 años</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
+    <tr><td>Más de 3 años</td><td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" /></td><td><input type="number" class="ventas" value="0" min="0" /></td><td class="total">0</td></tr>
   </tbody>
   <tfoot>
     <tr><td colspan="3">TOTAL MACHOS</td><td id="totalMachos">0</td></tr>
@@ -136,6 +112,7 @@
     <td id="resumenTotal">0</td>
   </tr>
 </table>
+
 
 <script>
 function calcularTotales(tablaID, totalID) {
@@ -190,44 +167,25 @@ function cargarDatos() {
       const fila = document.createElement('tr');
       fila.innerHTML = `
         <td>${item.descripcion}</td>
-        <td class="num-control">
-          <input type="number" class="compra" value="${item.compra}" min="0" data-valor="${item.compra}" data-previo="${item.compra}" />
-          <button class="btn-decrement">-</button>
-          <button class="btn-increment">+</button>
-        </td>
-        <td class="num-control">
-          <input type="number" class="ventas" value="${item.ventas}" min="0" />
-          <button class="btn-decrement">-</button>
-          <button class="btn-increment">+</button>
-        </td>
+        <td><input type="number" class="compra" value="${item.compra}" min="0" data-valor="${item.compra}" data-previo="${item.compra}" /></td>
+        <td><input type="number" class="ventas" value="${item.ventas}" min="0" /></td>
         <td class="total">0</td>`;
       tbodyHembras.appendChild(fila);
     });
   }
-
   if (datosMachos.length > 0) {
     tbodyMachos.innerHTML = '';
     datosMachos.forEach(item => {
       const fila = document.createElement('tr');
       fila.innerHTML = `
         <td>${item.descripcion}</td>
-        <td class="num-control">
-          <input type="number" class="compra" value="${item.compra}" min="0" data-valor="${item.compra}" data-previo="${item.compra}" />
-          <button class="btn-decrement">-</button>
-          <button class="btn-increment">+</button>
-        </td>
-        <td class="num-control">
-          <input type="number" class="ventas" value="${item.ventas}" min="0" />
-          <button class="btn-decrement">-</button>
-          <button class="btn-increment">+</button>
-        </td>
+        <td><input type="number" class="compra" value="${item.compra}" min="0" data-valor="${item.compra}" data-previo="${item.compra}" /></td>
+        <td><input type="number" class="ventas" value="${item.ventas}" min="0" /></td>
         <td class="total">0</td>`;
       tbodyMachos.appendChild(fila);
     });
   }
-
   actualizarListeners();
-  actualizarListenersControlesNumericos();
   calcularTotales("tablaHembras", "totalHembras");
   calcularTotales("tablaMachos", "totalMachos");
   actualizarResumen();
@@ -272,31 +230,6 @@ function actualizarListeners() {
   });
 }
 
-function actualizarListenersControlesNumericos() {
-  // Botones + y - incrementan o decrementan inputs numéricos
-  document.querySelectorAll('.num-control').forEach(container => {
-    const input = container.querySelector('input[type="number"]');
-    const btnIncrement = container.querySelector('.btn-increment');
-    const btnDecrement = container.querySelector('.btn-decrement');
-
-    btnIncrement.onclick = () => {
-      let val = parseInt(input.value) || 0;
-      val++;
-      input.value = val;
-      input.dispatchEvent(new Event('input'));
-    };
-
-    btnDecrement.onclick = () => {
-      let val = parseInt(input.value) || 0;
-      if (val > (parseInt(input.min) || 0)) {
-        val--;
-        input.value = val;
-        input.dispatchEvent(new Event('input'));
-      }
-    };
-  });
-}
-
 function agregarFila(tablaID) {
   const descripcion = prompt("Ingrese el nombre de la nueva categoría:", "");
   if (!descripcion) return;
@@ -304,20 +237,11 @@ function agregarFila(tablaID) {
   const fila = document.createElement('tr');
   fila.innerHTML = `
     <td>${descripcion}</td>
-    <td class="num-control">
-      <input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0" />
-      <button class="btn-decrement">-</button>
-      <button class="btn-increment">+</button>
-    </td>
-    <td class="num-control">
-      <input type="number" class="ventas" value="0" min="0" />
-      <button class="btn-decrement">-</button>
-      <button class="btn-increment">+</button>
-    </td>
+    <td><input type="number" class="compra" value="0" min="0" data-valor="0" data-previo="0"/></td>
+    <td><input type="number" class="ventas" value="0" min="0"/></td>
     <td class="total">0</td>`;
   tbody.appendChild(fila);
   actualizarListeners();
-  actualizarListenersControlesNumericos();
   guardarDatos();
 }
 
@@ -345,6 +269,5 @@ if ('serviceWorker' in navigator) {
     .catch(err => console.log('Service Worker error: ', err));
 }
 </script>
-
 </body>
 </html>
