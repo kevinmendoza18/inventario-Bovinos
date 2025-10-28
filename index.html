@@ -125,22 +125,27 @@
   <!-- Lógica (ruta según tu estructura) -->
   <script src="js/main.js"></script>
 
-  <!-- Service Worker registration -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').then(reg => {
-        console.log('SW registrado', reg.scope);
-        if (reg.waiting) reg.waiting.postMessage({ action: 'skipWaiting' });
-        reg.addEventListener('updatefound', () => {
-          const newWorker = reg.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              if (confirm('Nueva versión disponible. ¿Recargar para actualizar?')) window.location.reload();
-            }
-          });
-        });
-      }).catch(err => console.error('SW error', err));
-    }
-  </script>
+<!-- Service Worker registration -->
+<script>
+  // 🧩 Registro del Service Worker con actualización automática
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      console.log('✅ Service Worker registrado correctamente:', reg.scope);
+
+      // 🔁 Detectar si hay una nueva versión del SW
+      reg.onupdatefound = () => {
+        const newWorker = reg.installing;
+        newWorker.onstatechange = () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            console.log('⚡ Nueva versión detectada. Actualizando...');
+            window.location.reload(); // recarga automática
+          }
+        };
+      };
+    }).catch(err => {
+      console.error('❌ Error al registrar el Service Worker:', err);
+    });
+  }
+</script>
 </body>
 </html>
