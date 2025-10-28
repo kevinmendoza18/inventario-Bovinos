@@ -1,626 +1,140 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Inventario Bovinos</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inventario Bovinos</title>
+  <meta name="theme-color" content="#2d6a4f" />
 
-<!-- XLSX para exportar a Excel -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Estilos (verde degradado parecido al que mostrabas) -->
-<style>
-  :root{
-    --verde-1:#b7e4c7;
-    --verde-2:#52b788;
-    --verde-3:#2d6a4f;
-    --azul-sect:#0d6efd;
-    --btn-dark:#1b5e20;
-  }
-  body{font-family: 'Segoe UI', Roboto, Arial, sans-serif; background:#f6f7f8; margin:10px; color:#123;}
-  header{
-    background: linear-gradient(90deg,var(--verde-1) 0%, var(--verde-2) 100%);
-    padding:26px 12px;
-    border-radius:12px;
-    text-align:center;
-    margin:8px auto 18px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.06);
-    max-width:1200px;
-  }
-  header h1{ margin:0; color:rgba(10,55,35,0.9); font-size:2.2rem; letter-spacing:1px; }
-  .container{ max-width:1200px; margin:0 auto; }
+  <!-- Estilos (ruta según tu estructura) -->
+  <link rel="stylesheet" href="assets/css/style.css">
 
-  .section{
-    margin: 14px 0;
-  }
-  .section .head{
-    background: var(--azul-sect);
-    color:#fff;
-    padding:10px 14px;
-    border-radius:8px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 2px 8px rgba(0,0,0,0.05);
-  }
-  .section .head h2{ margin:0; font-size:1.35rem; font-weight:700; }
-  .head .controls{ display:flex; gap:8px; align-items:center; }
-  .ctrl-btn{ background:var(--btn-dark); color:#fff; border:none; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:700; }
-  .ctrl-btn.alt{ background:#0d6efd; }
-  .ctrl-btn.danger{ background:#dc3545; }
+  <!-- Manifest (asegúrate manifest.json está en /inventario-Bovinos/) -->
+  <link rel="manifest" href="manifest.json">
 
-  .box{
-    background:#fff;
-    border-radius:8px;
-    padding:12px;
-    margin-top:6px;
-    box-shadow:0 4px 14px rgba(0,0,0,0.04);
-    overflow:auto;
-  }
-
-  table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:760px;
-  }
-  th, td{
-    border:1px solid #e6e6e6;
-    padding:10px 8px;
-    text-align:center;
-    vertical-align:middle;
-  }
-  th{
-    background:#f0fbf5;
-    color:var(--verde-3);
-    font-weight:700;
-    font-size:1rem;
-  }
-
-  input[type="number"]{
-    width:84px;
-    padding:6px;
-    border-radius:6px;
-    border:1px solid #ccc;
-    text-align:center;
-    font-weight:600;
-    font-size:1rem;
-  }
-
-  /* Remove native arrows (we use our + / -) */
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0; }
-  input[type=number]{ -moz-appearance:textfield; }
-
-  .spin-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:34px;
-    height:34px;
-    border-radius:6px;
-    border:none;
-    background:var(--verde-3);
-    color:#fff;
-    font-size:18px;
-    cursor:pointer;
-    margin:0 6px;
-  }
-  .spin-btn.small{ width:30px; height:30px; font-size:16px; }
-
-  tfoot td{ background:#f4f6f5; font-weight:800; font-size:1.05rem; }
-
-  /* resumen */
-  .resumen{
-    display:flex;
-    gap:10px;
-    justify-content:center;
-    margin:18px 0 30px;
-    flex-wrap:wrap;
-  }
-  .card{
-    background: linear-gradient(180deg,#e9f7ee,#fff);
-    padding:12px 18px;
-    border-radius:10px;
-    min-width:180px;
-    text-align:center;
-    box-shadow:0 4px 12px rgba(0,0,0,0.04);
-  }
-  .card h3{ margin:6px 0; font-size:1rem; color:var(--verde-3); }
-  .card p{ font-size:1.6rem; margin:0; font-weight:800; color:#123; }
-
-  /* Descargar Excel */
-  #btnExcel{ display:block; margin:0 auto 22px; background:#0d9488; color:#fff; border:none; padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:800; }
-
-  @media (max-width:900px){
-    table{ min-width:700px; }
-    input[type="number"]{ width:68px; }
-  }
-  @media (max-width:600px){
-    header h1{ font-size:1.5rem; }
-    table{ min-width:600px; }
-    .spin-btn{ width:28px; height:28px; font-size:15px; }
-    input[type="number"]{ width:60px; font-size:0.95rem; }
-  }
-</style>
+  <!-- Icon -->
+  <link rel="icon" href="assets/img/icon.png" type="image/png">
 </head>
-<body>
-  <header><h1>INVENTARIO BOVINOS</h1></header>
-  <div class="container">
+<body class="bg-light">
 
-    <!-- HEMBRAS -->
-    <section class="section" id="sectionHembras">
-      <div class="head">
-        <h2>Registro de Hembras</h2>
-        <div class="controls">
-          <button class="ctrl-btn alt" id="nuevaCategoriaHembra">Nueva categoría</button>
-          <button class="ctrl-btn" id="agregarHembra">+</button>
-          <button class="ctrl-btn danger" id="eliminarHembra">-</button>
-        </div>
+  <div class="container py-4">
+    <header class="text-center mb-3">
+      <h1 class="display-6 text-success fw-bold">INVENTARIO BOVINOS</h1>
+      <p class="text-muted small">Compras · Nacimientos · Ventas · Totales — Guardado automático</p>
+    </header>
+
+    <!-- Controles globales -->
+    <div class="d-flex justify-content-between align-items-center mb-3 gap-2 flex-wrap">
+      <div>
+        <button id="addCategory" class="btn btn-outline-success btn-sm">+ Agregar categoría (ambas)</button>
+        <button id="exportBtn" class="btn btn-success btn-sm ms-2">📥 Descargar Excel</button>
       </div>
-
-      <div class="box">
-        <table id="tablaHembras">
-          <thead>
-            <tr><th>Descripción</th><th>Compras</th><th>Nacimientos</th><th>Ventas (registrar)</th><th>Total Existentes</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>0 a 3 meses</td>
-              <td>
-                <button class="spin-btn menos">−</button>
-                <input type="number" class="compra" value="0" min="0" data-acum="0">
-                <button class="spin-btn mas">+</button>
-              </td>
-              <td>
-                <button class="spin-btn menos">−</button>
-                <input type="number" class="nacimiento" value="0" min="0" data-acum="0">
-                <button class="spin-btn mas">+</button>
-              </td>
-              <td>
-                <button class="spin-btn menos">−</button>
-                <input type="number" class="venta" value="0" min="0">
-                <button class="spin-btn mas">+</button>
-              </td>
-              <td class="total">0</td>
-            </tr>
-            <tr>
-              <td>3 a 9 meses</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-            <tr>
-              <td>9 a 12 meses</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-            <tr>
-              <td>1 a 2 años</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-            <tr>
-              <td>2 a 3 años</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-            <tr>
-              <td>Mayor de 3 años</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr><td colspan="4">TOTAL HEMBRAS</td><td id="totalHembras">0</td></tr>
-          </tfoot>
-        </table>
+      <div class="text-end">
+        <small class="text-muted">Datos guardados en este dispositivo</small>
       </div>
-    </section>
-
-    <!-- MACHOS -->
-    <section class="section" id="sectionMachos">
-      <div class="head">
-        <h2>Registro de Machos</h2>
-        <div class="controls">
-          <button class="ctrl-btn alt" id="nuevaCategoriaMacho">Nueva categoría</button>
-          <button class="ctrl-btn" id="agregarMacho">+</button>
-          <button class="ctrl-btn danger" id="eliminarMacho">-</button>
-        </div>
-      </div>
-
-      <div class="box">
-        <table id="tablaMachos">
-          <thead>
-            <tr><th>Descripción</th><th>Compras</th><th>Nacimientos</th><th>Ventas (registrar)</th><th>Total Existentes</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>0 a 3 meses</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-            <tr>
-              <td>3 a 9 meses</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-            <tr>
-              <td>9 a 12 meses</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-            <tr>
-              <td>1 a 2 años</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-            <tr>
-              <td>2 a 3 años</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-            <tr>
-              <td>Mayor de 3 años</td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="compra" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="nacimiento" value="0" min="0" data-acum="0"><button class="spin-btn mas">+</button></td>
-              <td><button class="spin-btn menos">−</button><input type="number" class="venta" value="0" min="0"><button class="spin-btn mas">+</button></td>
-              <td class="total">0</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr><td colspan="4">TOTAL MACHOS</td><td id="totalMachos">0</td></tr>
-          </tfoot>
-        </table>
-      </div>
-    </section>
-
-    <!-- RESUMEN / TOTAL GENERAL -->
-    <div class="resumen">
-      <div class="card"><h3>Total Hembras</h3><p id="cardHembras">0</p></div>
-      <div class="card"><h3>Total Machos</h3><p id="cardMachos">0</p></div>
-      <div class="card"><h3>Total General</h3><p id="cardGeneral">0</p></div>
     </div>
 
-    <button id="btnExcel">📥 Descargar Excel</button>
+    <!-- Hembras -->
+    <section class="card mb-4 shadow-sm">
+      <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+        <strong>Hembras</strong>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table id="tablaHembras" class="table table-bordered table-sm mb-0 align-middle text-center">
+            <thead class="table-success">
+              <tr>
+                <th>Descripción</th>
+                <th>Compras</th>
+                <th>Nacimientos</th>
+                <th>Ventas (registrar)</th>
+                <th>Total Existentes</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr class="table-light fw-bold">
+                <td colspan="4" class="text-end">TOTAL HEMBRAS</td>
+                <td id="totalHembras">0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Machos -->
+    <section class="card mb-4 shadow-sm">
+      <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+        <strong>Machos</strong>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table id="tablaMachos" class="table table-bordered table-sm mb-0 align-middle text-center">
+            <thead class="table-info">
+              <tr>
+                <th>Descripción</th>
+                <th>Compras</th>
+                <th>Nacimientos</th>
+                <th>Ventas (registrar)</th>
+                <th>Total Existentes</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr class="table-light fw-bold">
+                <td colspan="4" class="text-end">TOTAL MACHOS</td>
+                <td id="totalMachos">0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resumen general -->
+    <section class="card p-3 shadow-sm mb-5">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="mb-0">Resumen</h5>
+          <small class="text-muted">Totales (Hembras + Machos)</small>
+        </div>
+        <div class="text-end">
+          <div>Total Hembras: <strong id="resHembras">0</strong></div>
+          <div>Total Machos: <strong id="resMachos">0</strong></div>
+          <div class="fs-4 text-success">Total General: <strong id="resTotal">0</strong></div>
+        </div>
+      </div>
+    </section>
 
   </div>
 
-<script>
-/* ========= LOGICA PRINCIPAL =========
-- compras & nacimientos: acumulativos (input muestra acumulado y atributo data-acum guarda el acumulado)
-- ventas: registradas como transacción (se suman a data-ventas y el campo se limpia)
-- guardado en localStorage en cada cambio
-- descarga Excel incluye Hembras, Machos y Resumen
-======================================*/
+  <!-- XLSX -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Lógica (ruta según tu estructura) -->
+  <script src="js/main.js"></script>
 
-/* utilitarios */
-const qs = sel => document.querySelector(sel);
-const qsa = sel => Array.from(document.querySelectorAll(sel));
-
-/* tablas */
-const tablaH = qs('#tablaHembras');
-const tablaM = qs('#tablaMachos');
-const totalHCell = qs('#totalHembras');
-const totalMCell = qs('#totalMachos');
-const cardH = qs('#cardHembras');
-const cardM = qs('#cardMachos');
-const cardG = qs('#cardGeneral');
-const LS_KEY_H = 'inv_hembras_v1';
-const LS_KEY_M = 'inv_machos_v1';
-
-/* ---------- FUNCIONES CALCULO ---------- */
-function calcularTabla(tabla, totalCell) {
-  let total = 0;
-  const rows = tabla.tBodies[0].rows;
-  for (let r of rows){
-    const comp = r.querySelector('.compra');
-    const nac = r.querySelector('.nacimiento');
-    // si no existen (filas cargadas por load), crear atributos por seguridad
-    if(comp && !comp.hasAttribute('data-acum')) comp.setAttribute('data-acum', comp.value || 0);
-    if(nac && !nac.hasAttribute('data-acum')) nac.setAttribute('data-acum', nac.value || 0);
-    const compA = parseInt(comp?.getAttribute('data-acum')) || 0;
-    const nacA = parseInt(nac?.getAttribute('data-acum')) || 0;
-    const ventasA = parseInt(r.dataset.acumVentas) || 0;
-    const totalFila = Math.max(0, compA + nacA - ventasA);
-    r.querySelector('.total').textContent = totalFila;
-    total += totalFila;
-  }
-  totalCell.textContent = total;
-  return total;
-}
-
-function actualizarResumen() {
-  const th = parseInt(qs('#totalHembras').textContent) || 0;
-  const tm = parseInt(qs('#totalMachos').textContent) || 0;
-  cardH.textContent = th;
-  cardM.textContent = tm;
-  cardG.textContent = th + tm;
-}
-
-/* ---------- GUARDAR / CARGAR localStorage ---------- */
-function extraerDatosDeTabla(tabla) {
-  return Array.from(tabla.tBodies[0].rows).map(r => {
-    return {
-      descripcion: r.cells[0].textContent.trim(),
-      compra_acum: r.querySelector('.compra')?.getAttribute('data-acum') || "0",
-      nacimiento_acum: r.querySelector('.nacimiento')?.getAttribute('data-acum') || "0",
-      ventas_acum: r.dataset.acumVentas || "0"
-    };
-  });
-}
-function guardarTodo() {
-  localStorage.setItem(LS_KEY_H, JSON.stringify(extraerDatosDeTabla(tablaH)));
-  localStorage.setItem(LS_KEY_M, JSON.stringify(extraerDatosDeTabla(tablaM)));
-}
-
-function crearFila(descripcion, compra_acum=0, nac_acum=0, ventas_acum=0){
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td>${descripcion}</td>
-    <td>
-      <button class="spin-btn menos">−</button>
-      <input type="number" class="compra" value="${compra_acum}" min="0" data-acum="${compra_acum}">
-      <button class="spin-btn mas">+</button>
-    </td>
-    <td>
-      <button class="spin-btn menos">−</button>
-      <input type="number" class="nacimiento" value="${nac_acum}" min="0" data-acum="${nac_acum}">
-      <button class="spin-btn mas">+</button>
-    </td>
-    <td>
-      <button class="spin-btn menos">−</button>
-      <input type="number" class="venta" value="0" min="0">
-      <button class="spin-btn mas">+</button>
-    </td>
-    <td class="total">0</td>
-  `;
-  tr.dataset.acumVentas = String(ventas_acum || 0);
-  return tr;
-}
-
-function cargarDesdeLocal(){
-  const h = JSON.parse(localStorage.getItem(LS_KEY_H) || '[]');
-  const m = JSON.parse(localStorage.getItem(LS_KEY_M) || '[]');
-  if(h.length){ // si hay datos, reemplazar cuerpo
-    const tbody = tablaH.tBodies[0];
-    tbody.innerHTML = '';
-    h.forEach(item => tbody.appendChild(crearFila(item.descripcion, item.compra_acum, item.nacimiento_acum, item.ventas_acum)));
-  }
-  if(m.length){
-    const tbody = tablaM.tBodies[0];
-    tbody.innerHTML = '';
-    m.forEach(item => tbody.appendChild(crearFila(item.descripcion, item.compra_acum, item.nacimiento_acum, item.ventas_acum)));
-  }
-}
-
-/* ---------- LISTENERS GENERICOS ---------- */
-function bindSpinButtons(container) {
-  container.querySelectorAll('.mas').forEach(btn=>{
-    btn.onclick = () => {
-      const input = btn.parentElement.querySelector('input');
-      // Si el input es compra o nacimiento, actualizamos acumulado
-      if(input.classList.contains('compra') || input.classList.contains('nacimiento')){
-        let acum = parseInt(input.getAttribute('data-acum')) || 0;
-        acum = acum + 1;
-        input.setAttribute('data-acum', String(acum));
-        input.value = acum;
-        recalcAllAndSave();
-      } else if(input.classList.contains('venta')){
-        // ventas se registran: sumarlas al acumulado de ventas y limpiar input
-        const tr = input.closest('tr');
-        let v = parseInt(tr.dataset.acumVentas) || 0;
-        v = v + 1;
-        tr.dataset.acumVentas = String(v);
-        input.value = 0;
-        recalcAllAndSave();
-      }
-    };
-  });
-  container.querySelectorAll('.menos').forEach(btn=>{
-    btn.onclick = () => {
-      const input = btn.parentElement.querySelector('input');
-      if(input.classList.contains('compra') || input.classList.contains('nacimiento')){
-        let acum = parseInt(input.getAttribute('data-acum')) || 0;
-        acum = Math.max(0, acum - 1);
-        input.setAttribute('data-acum', String(acum));
-        input.value = acum;
-        recalcAllAndSave();
-      } else if(input.classList.contains('venta')){
-        // para ventas, disminuir acumulado de ventas si hay
-        const tr = input.closest('tr');
-        let v = parseInt(tr.dataset.acumVentas) || 0;
-        v = Math.max(0, v - 1);
-        tr.dataset.acumVentas = String(v);
-        input.value = 0;
-        recalcAllAndSave();
-      }
-    };
-  });
-}
-
-/* inputs manuales: si usuario escribe en compra/nacimiento, tratamos input como nuevo acumulado (reemplaza) */
-function bindInputs(container){
-  container.querySelectorAll('.compra').forEach(inp=>{
-    inp.oninput = () => {
-      let nuevo = parseInt(inp.value) || 0;
-      if(nuevo < 0) nuevo = 0;
-      inp.setAttribute('data-acum', String(nuevo));
-      inp.value = nuevo;
-      recalcAllAndSave();
-    };
-  });
-  container.querySelectorAll('.nacimiento').forEach(inp=>{
-    inp.oninput = () => {
-      let nuevo = parseInt(inp.value) || 0;
-      if(nuevo < 0) nuevo = 0;
-      inp.setAttribute('data-acum', String(nuevo));
-      inp.value = nuevo;
-      recalcAllAndSave();
-    };
-  });
-  /* ventas: cuando el usuario escribe un valor >0 lo sumamos al acumulado de ventas (transacción), y limpiamos la casilla */
-  container.querySelectorAll('.venta').forEach(inp=>{
-    inp.oninput = () => {
-      let v = parseInt(inp.value) || 0;
-      if(v > 0){
-        const tr = inp.closest('tr');
-        const prev = parseInt(tr.dataset.acumVentas) || 0;
-        tr.dataset.acumVentas = String(prev + v);
-        inp.value = 0;
-        recalcAllAndSave();
-      }
-    };
-  });
-}
-
-/* recalcula todo y guarda */
-function recalcAllAndSave(){
-  calcularTabla(tablaH, totalHCell);
-  calcularTabla(tablaM, totalMCell);
-  actualizarResumen();
-  guardarTodo();
-}
-
-/* ---------- AGREGAR / ELIMINAR FILAS Y NAVEGACION ---------- */
-function agregarFilaTabla(tabla, descripcionDefault){
-  const desc = prompt('Ingrese la descripción de la nueva categoría:', descripcionDefault || 'Nueva categoría');
-  if(desc === null) return;
-  const tr = crearFila(desc, 0, 0, 0);
-  tabla.tBodies[0].appendChild(tr);
-  bindSpinButtons(tr);
-  bindInputs(tr);
-  recalcAllAndSave();
-}
-
-function eliminarUltimaFila(tabla){
-  const tbody = tabla.tBodies[0];
-  if(tbody.rows.length === 0){ alert('No hay filas para eliminar'); return; }
-  if(!confirm('¿Eliminar la última categoría?')) return;
-  tbody.deleteRow(tbody.rows.length - 1);
-  recalcAllAndSave();
-}
-
-/* Bind headers */
-qs('#agregarHembra').addEventListener('click', ()=> agregarFilaTabla(tablaH, 'Nueva categoría'));
-qs('#eliminarHembra').addEventListener('click', ()=> eliminarUltimaFila(tablaH));
-qs('#nuevaCategoriaHembra').addEventListener('click', ()=> agregarFilaTabla(tablaH, ''));
-
-qs('#agregarMacho').addEventListener('click', ()=> agregarFilaTabla(tablaM, 'Nueva categoría'));
-qs('#eliminarMacho').addEventListener('click', ()=> eliminarUltimaFila(tablaM));
-qs('#nuevaCategoriaMacho').addEventListener('click', ()=> agregarFilaTabla(tablaM, ''));
-
-/* ---------- EXPORTAR A EXCEL ---------- */
-qs('#btnExcel').addEventListener('click', ()=>{
-  const wb = XLSX.utils.book_new();
-
-  // Hembras sheet
-  const rowsH = [['Descripción','Compras acumuladas','Nacimientos acumulados','Ventas aplicadas','Total existentes']];
-  Array.from(tablaH.tBodies[0].rows).forEach(r=>{
-    const desc = r.cells[0].textContent.trim();
-    const comp = r.querySelector('.compra')?.getAttribute('data-acum') || "0";
-    const nac = r.querySelector('.nacimiento')?.getAttribute('data-acum') || "0";
-    const ventas = r.dataset.acumVentas || "0";
-    const total = r.querySelector('.total').textContent || "0";
-    rowsH.push([desc, comp, nac, ventas, total]);
-  });
-  rowsH.push(['TOTAL HEMBRAS','','','', qs('#totalHembras').textContent]);
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rowsH), 'Hembras');
-
-  // Machos sheet
-  const rowsM = [['Descripción','Compras acumuladas','Nacimientos acumulados','Ventas aplicadas','Total existentes']];
-  Array.from(tablaM.tBodies[0].rows).forEach(r=>{
-    const desc = r.cells[0].textContent.trim();
-    const comp = r.querySelector('.compra')?.getAttribute('data-acum') || "0";
-    const nac = r.querySelector('.nacimiento')?.getAttribute('data-acum') || "0";
-    const ventas = r.dataset.acumVentas || "0";
-    const total = r.querySelector('.total').textContent || "0";
-    rowsM.push([desc, comp, nac, ventas, total]);
-  });
-  rowsM.push(['TOTAL MACHOS','','','', qs('#totalMachos').textContent]);
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rowsM), 'Machos');
-
-  // Resumen
-  const resumen = [
-    ['Total Hembras','Total Machos','Total General'],
-    [ qs('#totalHembras').textContent, qs('#totalMachos').textContent, qs('#cardGeneral').textContent ]
-  ];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(resumen), 'Resumen');
-
-  XLSX.writeFile(wb, 'Inventario_Bovinos.xlsx');
-});
-
-/* ---------- INICIALIZACION ---------- */
-(function init(){
-  cargarDesdeLocal();
-
-  // En caso no haya datos, dejamos las filas iniciales pero aseguramos atributos data-acum y dataset
-  qsa('table').forEach(t=>{
-    Array.from(t.tBodies[0].rows).forEach(r=>{
-      const comp = r.querySelector('.compra');
-      const nac = r.querySelector('.nacimiento');
-      if(comp && !comp.hasAttribute('data-acum')) comp.setAttribute('data-acum', comp.value || 0);
-      if(nac && !nac.hasAttribute('data-acum')) nac.setAttribute('data-acum', nac.value || 0);
-      if(!r.dataset.acumVentas) r.dataset.acumVentas = r.dataset.acumVentas || "0";
-    });
-  });
-
-  // bind a todo
-  qsa('#tablaHembras tbody tr, #tablaMachos tbody tr').forEach(tr=>{
-    bindSpinButtons(tr);
-    bindInputs(tr);
-  });
-
-  // listeners globales por si el usuario pega o cambia inputs
-  document.addEventListener('input', function(e){
-    if(e.target.matches('.compra') || e.target.matches('.nacimiento') || e.target.matches('.venta')){
-      // handeled already by bindInputs
+  <!-- Service Worker registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(reg => {
+        console.log('SW registrado', reg.scope);
+        if (reg.waiting) reg.waiting.postMessage({ action: 'skipWaiting' });
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              if (confirm('Nueva versión disponible. ¿Recargar para actualizar?')) window.location.reload();
+            }
+          });
+        });
+      }).catch(err => console.error('SW error', err));
     }
-  });
-
-  // cálculo inicial y guardado
-  recalcAllAndSave();
-})();
-
-/* ---------- SERVICE WORKER (registro) ---------- */
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/inventario-Bovinos/sw.js').then(reg=>{
-    console.log('SW registrado', reg.scope);
-    // avisar al SW que aplique skipWaiting si hay nueva versión desde index
-    if(reg.waiting){
-      reg.waiting.postMessage({ action:'skipWaiting' });
-    }
-    reg.addEventListener('updatefound', ()=>{
-      const newWorker = reg.installing;
-      newWorker.addEventListener('statechange', ()=>{
-        if(newWorker.state === 'installed' && navigator.serviceWorker.controller){
-          // nueva versión instalada — notificar al usuario (opcional)
-          if(confirm('Hay una nueva versión disponible. ¿Deseas recargar para actualizar?')){
-            window.location.reload();
-          }
-        }
-      });
-    });
-  }).catch(err => console.log('SW error', err));
-}
-</script>
+  </script>
 </body>
 </html>
