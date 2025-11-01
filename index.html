@@ -4,148 +4,408 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Inventario Bovinos</title>
-  <meta name="theme-color" content="#2d6a4f" />
-  <base href="./">
-
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Estilos -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
-
-  <!-- Manifest -->
-  <link rel="manifest" href="manifest.json">
-
-  <!-- Icono -->
-  <link rel="icon" href="assets/img/icon.png" type="image/png">
-
-  <!-- Evitar caché -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
-<body class="bg-light">
+<body>
+  <button id="btn-hamburger" aria-label="Abrir menú">☰</button>
+  <aside id="sidebar" class="sidebar">
+    <nav>
+      <ul>
+        <li><a href="#" data-section="inventario" class="active">🐄 Inventario</a></li>
+        <li><a href="#" data-section="recomendaciones">📋 Recomendaciones</a></li>
+        <li><a href="#" data-section="registro">🗂 Registro</a></li>
+        <li><a href="#" data-section="nacimientos">🍼 Nacimientos</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <div id="overlay"></div>
 
-  <div class="container py-4">
-    <header class="text-center mb-3">
-      <h1 class="display-6 text-success fw-bold">INVENTARIO BOVINOS</h1>
-      <p class="text-muted small">Compras · Nacimientos · Ventas · Totales — Guardado automático</p>
+  <main class="main-content">
+    <header class="text-center my-4">
+      <h1 class="titulo-principal">INVENTARIO BOVINOS</h1>
+      <p class="subtitulo">Compras · Nacimientos · Ventas · Totales · Guardado automático</p>
     </header>
-
-    <!-- Controles globales -->
-    <div class="d-flex justify-content-between align-items-center mb-3 gap-2 flex-wrap">
-      <div>
-        <button id="addCategory" class="btn btn-outline-success btn-sm">+ Agregar categoría (ambas)</button>
-        <button id="exportBtn" class="btn btn-success btn-sm ms-2">📥 Descargar Excel</button>
+    <!-- SECCIÓN INVENTARIO -->
+    <section id="inventario" class="section active">
+      <div class="d-flex justify-content-end align-items-center mb-3" style="gap: 12px;">
+        <button id="btn-guardar-inventario" class="btn btn-success">💾 Guardar inventario</button>
+        <button id="btn-descargar-inventario" class="btn btn-outline-secondary">📊 Descargar Excel</button>
+        <button id="btn-reset-inventario" class="btn btn-outline-danger">🗑 Reiniciar</button>
       </div>
-      <div class="text-end">
-        <small class="text-muted">Datos guardados en este dispositivo</small>
+      <div class="table-container">
+        <!-- TABLA HEMBRAS -->
+        <div class="card mb-4 shadow">
+          <div class="card-header bg-success text-white fw-bold">Hembras</div>
+          <div class="card-body table-responsive">
+            <table class="table table-bordered text-center align-middle" id="tabla-hembras">
+              <thead class="table-light">
+                <tr>
+                  <th>Descripción</th>
+                  <th>Compras actuales</th>
+                  <th class="col-agregar">Agregar compras</th>
+                  <th>Ventas actuales</th>
+                  <th class="col-agregar">Agregar ventas</th>
+                  <th>Total Existentes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>0 a 3 meses</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+                <tr><td>3 a 9 meses</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+                <tr><td>9 a 12 meses</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+                <tr><td>1 a 2 años</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+                <tr><td>2 a 3 años</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+                <tr><td>Mayor de 3 años</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr class="fw-bold"><td colspan="5">Total Hembras</td><td id="total-hembras">0</td></tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <!-- TABLA MACHOS -->
+        <div class="card mb-4 shadow">
+          <div class="card-header bg-primary text-white fw-bold">Machos</div>
+          <div class="card-body table-responsive">
+            <table class="table table-bordered text-center align-middle" id="tabla-machos">
+              <thead class="table-light">
+                <tr>
+                  <th>Descripción</th>
+                  <th>Compras actuales</th>
+                  <th class="col-agregar">Agregar compras</th>
+                  <th>Ventas actuales</th>
+                  <th class="col-agregar">Agregar ventas</th>
+                  <th>Total Existentes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>0 a 3 meses</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+                <tr><td>3 a 9 meses</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+                <tr><td>9 a 12 meses</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+                <tr><td>1 a 2 años</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+                <tr><td>2 a 3 años</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+                <tr><td>Mayor de 3 años</td>
+                  <td><input type="number" class="form-control compras" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control comprar-agregar" min="0" placeholder="+ compras">
+                      <button class="btn btn-success agregar-btn" title="Sumar compras"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td><input type="number" class="form-control ventas" min="0" readonly></td>
+                  <td>
+                    <div class="input-group input-group-sm agregar-box">
+                      <input type="number" class="form-control ventas-agregar" min="0" placeholder="+ ventas">
+                      <button class="btn btn-danger ventas-btn" title="Sumar ventas"><span>+</span></button>
+                    </div>
+                  </td>
+                  <td class="total">0</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr class="fw-bold"><td colspan="5">Total Machos</td><td id="total-machos">0</td></tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <!-- Hembras -->
-    <section class="card mb-4 shadow-sm">
-      <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-        <strong>Hembras</strong>
+      <div class="alert totales text-center fw-bold">
+        🐄 <span id="mostrar-hembras">0</span> &nbsp; | &nbsp; 🐂 <span id="mostrar-machos">0</span> &nbsp; | &nbsp; 🔢 <span id="total-general">0</span>
       </div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table id="tablaHembras" class="table table-bordered table-sm mb-0 align-middle text-center">
-            <thead class="table-success">
-              <tr>
-                <th>Descripción</th>
-                <th>Compras</th>
-                <th>Nacimientos</th>
-                <th>Ventas (registrar)</th>
-                <th>Total Existentes</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-            <tfoot>
-              <tr class="table-light fw-bold">
-                <td colspan="4" class="text-end">TOTAL HEMBRAS</td>
-                <td id="totalHembras">0</td>
-              </tr>
-            </tfoot>
-          </table>
+    </section>
+    <!-- SECCIÓN RECOMENDACIONES igual que antes -->
+    <section id="recomendaciones" class="section">
+      <div class="recom-container" style="max-width:1100px; margin:auto;">
+        <div class="recom-row">
+          <div class="recom-col recom-guias">
+            <div class="recom-titulo recom-titulo-guias text-center">GUIAS</div>
+            <div class="recom-content">
+              1- Pagar consignación por valor de $ 10.850.<br>
+              2- Datos comprado: (cédula,nombre completo).<br>
+              Nombre de la finca
+            </div>
+          </div>
+          <div class="recom-col recom-predio">
+            <div class="recom-titulo recom-titulo-predio text-center">REGISTRO DE PREDIO</div>
+            <div class="recom-content">
+              1-Comprar formato de registro de predio.<br>
+              2-Copia de la cédula.<br>
+              3-Llenar el formato si es arrendatario con nombre y cédula de propietario.
+            </div>
+          </div>
+          <div class="recom-col recom-hierro">
+            <div class="recom-titulo recom-titulo-hierro text-center">REGISTRO DE HIERRO</div>
+            <div class="recom-content">
+              1- Dirigirse al comité ganadero en donde le indican el procedimiento.<br>
+              2-Sacar copia del patrón del hierro y copia de la cédula.<br>
+              3-Consignar $9.400 en un corresponsal bancario.<br>
+              4-Dirigirse a una oficina del ICA para registro del hierro.
+            </div>
+          </div>
+        </div>
+        <div class="recom-observacion">
+          <span class="recom-observ-label">OBSERVACIONES:</span>
+          Cuando compre animales no olvide llevar la guia a una oficina del ICA para su comprobación si va en carro. Y si va a pie solicítele al comprador que le haga comprobar la guia. Después de realizar su vacunación no olvide ir al Comité ganadero, reclamar su registro de vacunas, verificar que todos los datos y cantidad de animales estén acorde a lo que vacuno y luego dirigirse a una oficina ICA para que le carguen el inventario.
         </div>
       </div>
     </section>
-
-    <!-- Machos -->
-    <section class="card mb-4 shadow-sm">
-      <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-        <strong>Machos</strong>
+    <!-- SECCIÓN REGISTRO -->
+    <section id="registro" class="section">
+      <div class="d-flex justify-content-end mb-2" style="gap:8px;">
+        <button id="btn-agregar-registro" class="btn btn-info btn-sm">Agregar fila</button>
+        <button id="btn-guardar-registro" class="btn btn-success btn-sm">Guardar</button>
+        <button id="btn-limpiar-registro" class="btn btn-outline-danger btn-sm">Limpiar</button>
       </div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table id="tablaMachos" class="table table-bordered table-sm mb-0 align-middle text-center">
-            <thead class="table-info">
-              <tr>
-                <th>Descripción</th>
-                <th>Compras</th>
-                <th>Nacimientos</th>
-                <th>Ventas (registrar)</th>
-                <th>Total Existentes</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-            <tfoot>
-              <tr class="table-light fw-bold">
-                <td colspan="4" class="text-end">TOTAL MACHOS</td>
-                <td id="totalMachos">0</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+      <h3 class="text-center mb-3">Recordatorio de guías</h3>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered registro-table text-center align-middle bg-white" id="tabla-registro">
+          <thead class="table-light">
+            <tr>
+              <th>Fecha</th>
+              <th>Número de guía</th>
+              <th>Ciudad</th>
+              <th>Vereda</th>
+              <th>Predio de origen</th>
+              <th>Vendedor</th>
+              <th>Comprador</th>
+              <th>Predio destino</th>
+              <th>Machos</th>
+              <th>Hembras</th>
+              <th>Total animales</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="date" class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input type="number" class="form-control" min="0"></td>
+              <td><input type="number" class="form-control" min="0"></td>
+              <td><input type="number" class="form-control" min="0"></td>
+              <td><button class="btn btn-outline-danger btn-sm eliminar-registro" title="Eliminar fila">&times;</button></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
-
-    <!-- Resumen general -->
-    <section class="card p-3 shadow-sm mb-5">
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <h5 class="mb-0">Resumen</h5>
-          <small class="text-muted">Totales (Hembras + Machos)</small>
-        </div>
-        <div class="text-end">
-          <div>Total Hembras: <strong id="resHembras">0</strong></div>
-          <div>Total Machos: <strong id="resMachos">0</strong></div>
-          <div class="fs-4 text-success">Total General: <strong id="resTotal">0</strong></div>
-        </div>
+    <!-- SECCIÓN NACIMIENTOS -->
+    <section id="nacimientos" class="section">
+      <div class="d-flex justify-content-end mb-2" style="gap:8px;">
+        <button id="btn-agregar-nacimiento" class="btn btn-info btn-sm">Agregar fila</button>
+        <button id="btn-guardar-nacimiento" class="btn btn-success btn-sm">Guardar</button>
+        <button id="btn-limpiar-nacimiento" class="btn btn-outline-danger btn-sm">Limpiar</button>
+      </div>
+      <h3 class="text-center mb-3">Nacimientos</h3>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered nacimientos-table text-center align-middle bg-white" id="tabla-nacimientos">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre de animal</th>
+              <th>Fecha preñez</th>
+              <th>Fecha parto</th>
+              <th>Cantidad Animales</th>
+              <th>Cantidad partos</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input class="form-control"></td>
+              <td><input type="date" class="form-control"></td>
+              <td><input type="date" class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><button class="btn btn-outline-danger btn-sm eliminar-nacimiento" title="Eliminar fila">&times;</button></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
-
-  </div>
-
-  <!-- XLSX -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Lógica (ruta según tu estructura) -->
+  </main>
   <script src="js/main.js"></script>
-
-<!-- Service Worker registration -->
-<script>
-  // 🧩 Registro del Service Worker con actualización automática
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').then(reg => {
-      console.log('✅ Service Worker registrado correctamente:', reg.scope);
-
-      // 🔁 Detectar si hay una nueva versión del SW
-      reg.onupdatefound = () => {
-        const newWorker = reg.installing;
-        newWorker.onstatechange = () => {
-          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            console.log('⚡ Nueva versión detectada. Actualizando...');
-            window.location.reload(); // recarga automática
-          }
-        };
-      };
-    }).catch(err => {
-      console.error('❌ Error al registrar el Service Worker:', err);
-    });
-  }
-</script>
 </body>
 </html>
