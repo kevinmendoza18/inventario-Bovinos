@@ -1,4 +1,4 @@
-let comprasTemp = { hembras: [0,0,0,0,0,0], machos: [0,0,0,0,0,0] };
+let comprasTemp = { hembras: [0,0,0,0,0,0,0], machos: [0,0,0,0,0,0,0] };
 let ventasTemp = { hembras: [0,0,0,0,0,0], machos: [0,0,0,0,0,0] };
 function getRows(tablaId) { return document.querySelectorAll(`#${tablaId} tbody tr`); }
 function actualizarTotales(tablaId, totalId, tipo) {
