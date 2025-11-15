@@ -349,8 +349,85 @@
       </div>
     </section>
 
-    <section id="registro" class="section"></section>
-    <section id="nacimientos" class="section"></section>
+
+    <!-- seccion registro -->
+    <section id="registro" class="section">
+      <div class="d-flex justify-content-end mb-2" style="gap:8px;">
+        <button id="btn-agregar-registro" class="btn btn-info btn-sm">Agregar fila</button>
+        <button id="btn-guardar-registro" class="btn btn-success btn-sm">Guardar</button>
+        <button id="btn-limpiar-registro" class="btn btn-outline-danger btn-sm">Limpiar</button>
+      </div>
+      <h3 class="text-center mb-3">Recordatorio de guías</h3>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered registro-table text-center align-middle bg-white" id="tabla-registro">
+          <thead class="table-light">
+            <tr>
+              <th>Fecha</th>
+              <th>Número de guía</th>
+              <th>Ciudad</th>
+              <th>Vereda</th>
+              <th>Predio de origen</th>
+              <th>Vendedor</th>
+              <th>Comprador</th>
+              <th>Predio destino</th>
+              <th>Machos</th>
+              <th>Hembras</th>
+              <th>Total animales</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="date" class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input type="number" class="form-control" min="0"></td>
+              <td><input type="number" class="form-control" min="0"></td>
+              <td><input type="number" class="form-control" min="0"></td>
+              <td><button class="btn btn-outline-danger btn-sm eliminar-registro" title="Eliminar fila">&times;</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- seccion nacimientos -->
+    <section id="nacimientos" class="section">
+      <div class="d-flex justify-content-end mb-2" style="gap:8px;">
+        <button id="btn-agregar-nacimiento" class="btn btn-info btn-sm">Agregar fila</button>
+        <button id="btn-guardar-nacimiento" class="btn btn-success btn-sm">Guardar</button>
+        <button id="btn-limpiar-nacimiento" class="btn btn-outline-danger btn-sm">Limpiar</button>
+      </div>
+      <h3 class="text-center mb-3">Nacimientos</h3>
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered nacimientos-table text-center align-middle bg-white" id="tabla-nacimientos">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre de animal</th>
+              <th>Fecha preñez</th>
+              <th>Fecha parto</th>
+              <th>Cantidad Animales</th>
+              <th>Cantidad partos</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input class="form-control"></td>
+              <td><input type="date" class="form-control"></td>
+              <td><input type="date" class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><input class="form-control"></td>
+              <td><button class="btn btn-outline-danger btn-sm eliminar-nacimiento" title="Eliminar fila">&times;</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
   </main>
 
