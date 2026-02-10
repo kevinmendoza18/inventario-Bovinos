@@ -16,9 +16,6 @@
 
   <!-- XLSX -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-  <link rel="manifest" href="manifest.json">
-
 </head>
 <body>
   <button id="btn-hamburger" aria-label="Abrir menú">☰</button>
@@ -44,6 +41,26 @@
 
     <!-- ========== INVENTARIO ========= -->
     <section id="inventario" class="section active">
+
+      <!-- BLOQUE DE PREDIOS -->
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body d-flex flex-wrap justify-content-between align-items-center" style="gap:12px;">
+          <div>
+            <span class="fw-semibold">Predio activo:</span>
+            <span id="nombre-predio-activo" class="badge bg-success ms-1">—</span>
+          </div>
+          <div class="d-flex flex-wrap align-items-center" style="gap:8px;">
+            <button id="btn-agregar-predio" class="btn btn-sm btn-primary">
+              ➕ Agregar predio
+            </button>
+            <select id="select-predios" class="form-select form-select-sm" style="min-width:190px;"></select>
+            <button id="btn-eliminar-predio" class="btn btn-sm btn-outline-danger">
+              🗑 Eliminar predio
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="d-flex justify-content-end align-items-center mb-3" style="gap: 12px;">
         <button id="btn-guardar-inventario" class="btn btn-success">💾 Guardar inventario</button>
         <button id="btn-descargar-inventario" class="btn btn-outline-secondary">📊 Descargar Excel</button>
@@ -147,7 +164,6 @@
                     </td>
                     <td class="total">0</td></tr>
 
-                <!-- FILA NUEVA PEDIDA: antes de la última -->
                 <tr><td>3 a 5 años</td><td><input type="number" class="form-control compras" min="0" readonly></td>
                     <td>
                       <div class="input-group input-group-sm agregar-box">
@@ -298,7 +314,6 @@
                       </div>
                     </td>
                     <td class="total">0</td></tr>
-
               </tbody>
               <tfoot>
                 <tr class="fw-bold"><td colspan="5">Total Machos</td><td id="total-machos">0</td></tr>
@@ -315,7 +330,7 @@
       </div>
     </section>
 
-    <!-- OTRAS SECCIONES (sin cambios funcionales) -->
+    <!-- OTRAS SECCIONES -->
     <section id="recomendaciones" class="section">
       <div class="recom-container" style="max-width:1100px; margin:auto;">
         <div class="recom-row">
@@ -351,7 +366,6 @@
         </div>
       </div>
     </section>
-
 
     <!-- seccion registro -->
     <section id="registro" class="section">
@@ -398,6 +412,7 @@
         </table>
       </div>
     </section>
+
     <!-- seccion nacimientos -->
     <section id="nacimientos" class="section">
       <div class="d-flex justify-content-end mb-2" style="gap:8px;">

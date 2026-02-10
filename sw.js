@@ -1,5 +1,5 @@
 // Nombre de la caché (aumenta la versión si haces cambios grandes)
-const CACHE_NAME = 'inventario-bovinos-v3.3';
+const CACHE_NAME = 'inventario-bovinos-v3.5';
 
 const urlsToCache = [
   '/inventario-Bovinos/',
